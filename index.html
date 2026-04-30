@@ -11,11 +11,19 @@
         <!-- 标题 -->
         <h1 class="text-2xl font-bold text-center mb-6">📅 连续签到领奖励</h1>
 
-        <!-- 【已移到最顶部】邮箱绑定区域 -->
+        <!-- 邮箱绑定区域 -->
         <div class="bg-blue-50 p-4 rounded-lg mb-6">
             <h3 class="font-bold text-center text-blue-600 mb-3">📩 先绑定邮箱，奖励统一发放</h3>
-            <input type="email" id="email-input" placeholder="请输入您的常用邮箱（必填）" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="email" id="email-input" placeholder="请输入您的常用邮箱（如：xxx@qq.com）" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             <p class="text-xs text-center text-gray-500 mt-2">⚠️ 所有签到奖励将统一发送至该邮箱，请准确填写</p>
+        </div>
+
+        <!-- 🔥 你的专属转发海报（已适配3:4比例） -->
+        <div class="mb-6 text-center">
+            <p class="font-bold mb-2">🖼️ 长按保存转发海报</p>
+            <!-- 把这里的链接替换成你刚才复制的GitHub图片链接 -->
+            <img src="这里替换成你的海报图片链接" alt="格道资源站海报" class="w-full max-w-xs mx-auto rounded-lg shadow-md border">
+            <p class="text-xs text-gray-500 mt-1">长按图片 → 保存到手机</p>
         </div>
 
         <!-- 签到状态 -->
@@ -27,9 +35,9 @@
             </div>
         </div>
 
-        <!-- 签到按钮 -->
-        <button id="sign-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg mb-6 transition-colors">
-            立即签到
+        <!-- ✅ 一键转发按钮 -->
+        <button id="sign-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg mb-6 transition-colors">
+            一键复制文案 + 去发朋友圈
         </button>
 
         <!-- 奖励列表 -->
@@ -41,7 +49,7 @@
             </div>
             <div class="p-3 border rounded-lg bg-gray-50">
                 <p class="font-semibold">连续签到3天</p>
-                <p class="text-sm text-gray-600">4月新番全集 + 10款AI工具大礼包</p>
+                <p class="text-sm text-gray-600">4月新番全集 + AI工具大礼包</p>
             </div>
             <div class="p-3 border rounded-lg bg-gray-50">
                 <p class="font-semibold">连续签到7天</p>
@@ -57,147 +65,102 @@
         <div class="bg-yellow-50 p-4 rounded-lg text-sm text-gray-700">
             <h4 class="font-bold mb-2">📌 签到规则</h4>
             <ul class="space-y-1">
-                <li>1. 每日可签到1次，断签后签到进度将重置为0天</li>
-                <li>2. 签到需转发指定文案到朋友圈并上传截图</li>
-                <li>3. 所有奖励自动发放至绑定邮箱，无需手动领取</li>
+                <li>1. 每日签到1次，断签重置天数</li>
+                <li>2. 必须转发朋友圈+上传截图才算签到成功</li>
+                <li>3. 奖励24小时内发放至绑定邮箱</li>
             </ul>
         </div>
     </div>
 
-    <!-- 上传朋友圈截图弹窗 -->
+    <!-- 上传截图弹窗 -->
     <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 class="text-xl font-bold mb-4">📤 上传朋友圈截图</h2>
-            <p class="text-gray-600 mb-4">请上传包含完整文案和发布时间的朋友圈截图</p>
-            
+            <p class="text-gray-600 mb-4">请上传发布成功的朋友圈截图</p>
             <input type="file" id="screenshot-input" accept="image/*" class="w-full mb-4">
             <p id="file-name" class="text-sm text-green-600 mb-4 hidden"></p>
-
             <div class="flex gap-4">
-                <button id="cancel-upload" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">
-                    取消
-                </button>
-                <button id="submit-upload" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50" disabled>
-                    提交截图
-                </button>
+                <button id="cancel-upload" class="flex-1 bg-gray-200 rounded-lg py-2">取消</button>
+                <button id="submit-upload" class="flex-1 bg-blue-500 text-white rounded-lg py-2 disabled:opacity-50" disabled>提交截图</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 【可修改】推广文案（用户点击签到会自动复制）
-        const PROMO_TEXT = `【格道黑科技】免费分享2026最新影视、动漫、AI工具、副业项目大全！
-我已经在这里领到了好多好用的资源，推荐给大家👇
+        // 推广文案（和海报完全匹配）
+        const PROMO_TEXT = `【格道资源站】免费分享2026最新影视、动漫、AI工具、副业项目！
+我已经领到超多资源，推荐给大家👇
 关注公众号【格道黑科技】，回复「资源站」获取地址`;
 
-        // 初始化DOM元素
+        // 严格邮箱验证
+        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // DOM元素
         const signBtn = document.getElementById('sign-btn');
-        const daysDisplay = document.getElementById('days-display');
-        const emailDisplay = document.getElementById('email-display');
         const emailInput = document.getElementById('email-input');
+        const emailDisplay = document.getElementById('email-display');
+        const daysDisplay = document.getElementById('days-display');
         const progressBar = document.getElementById('progress-bar');
         const uploadModal = document.getElementById('upload-modal');
         const screenshotInput = document.getElementById('screenshot-input');
         const fileNameEl = document.getElementById('file-name');
-        const cancelUploadBtn = document.getElementById('cancel-upload');
         const submitUploadBtn = document.getElementById('submit-upload');
+        const cancelUploadBtn = document.getElementById('cancel-upload');
 
-        // 读取本地存储数据
+        // 本地存储
         let lastSignDate = localStorage.getItem('lastSignDate');
         let continuousDays = parseInt(localStorage.getItem('continuousDays') || 0);
         let userEmail = localStorage.getItem('userEmail') || '';
 
-        // 页面加载时更新显示
+        // 更新界面
         function updateDisplay() {
             daysDisplay.textContent = continuousDays;
             emailDisplay.textContent = userEmail || '未绑定';
-            progressBar.style.width = `${Math.min(continuousDays / 15 * 100, 100)}%`;
-            if (userEmail) {
-                emailInput.value = userEmail;
-            }
+            progressBar.style.width = `${Math.min(continuousDays/15*100, 100)}%`;
+            userEmail && (emailInput.value = userEmail);
         }
 
-        // 签到按钮点击事件
-        signBtn.addEventListener('click', async function() {
+        // 一键转发按钮
+        signBtn.addEventListener('click', async () => {
             const email = emailInput.value.trim();
-            if (!email) {
-                alert('请先输入您的邮箱！\n所有奖励将发送至该邮箱');
-                return;
-            }
-
-            // 保存邮箱
+            if(!email){alert('请输入邮箱！');return;}
+            if(!EMAIL_REGEX.test(email)){alert('请输入完整邮箱（xxx@qq.com）');return;}
+            
             userEmail = email;
             localStorage.setItem('userEmail', email);
-            emailDisplay.textContent = email;
-
-            const today = new Date().toDateString();
-            if (lastSignDate === today) {
-                alert('✅ 您今天已经签到过了！明天再来吧~');
-                return;
-            }
-
-            // 步骤1：复制推广文案到剪贴板
-            try {
-                await navigator.clipboard.writeText(PROMO_TEXT);
-                alert('✅ 推广文案已复制！\n请转发到朋友圈后，上传截图完成签到');
-                // 步骤2：打开上传截图弹窗
-                uploadModal.classList.remove('hidden');
-            } catch (error) {
-                // 降级方案：浏览器不支持剪贴板API时，手动复制
-                alert('请手动复制以下文案转发朋友圈：\n\n' + PROMO_TEXT);
-                uploadModal.classList.remove('hidden');
-            }
+            
+            // 自动复制文案
+            try{await navigator.clipboard.writeText(PROMO_TEXT);}catch(e){}
+            
+            // 引导用户操作
+            alert(`✅ 文案已复制！
+1. 长按页面图片保存到手机
+2. 打开微信朋友圈
+3. 粘贴文案+上传图片发布
+4. 返回上传发布截图完成签到`);
+            
+            uploadModal.classList.remove('hidden');
         });
 
-        // 监听文件选择，启用提交按钮
-        screenshotInput.addEventListener('change', function(e) {
+        // 上传截图逻辑
+        screenshotInput.addEventListener('change', (e)=>{
             const file = e.target.files[0];
-            if (file) {
-                fileNameEl.textContent = `已选择文件：${file.name}`;
-                fileNameEl.classList.remove('hidden');
-                submitUploadBtn.disabled = false;
-            } else {
-                fileNameEl.classList.add('hidden');
-                submitUploadBtn.disabled = true;
-            }
+            if(file){fileNameEl.textContent=`已选：${file.name}`;fileNameEl.classList.remove('hidden');submitUploadBtn.disabled=false;}
         });
-
-        // 取消上传
-        cancelUploadBtn.addEventListener('click', function() {
-            uploadModal.classList.add('hidden');
-            screenshotInput.value = '';
-            fileNameEl.classList.add('hidden');
-            submitUploadBtn.disabled = true;
-        });
-
-        // 提交截图，完成签到
-        submitUploadBtn.addEventListener('click', function() {
-            // 步骤3：更新签到数据
+        cancelUploadBtn.onclick=()=>{uploadModal.classList.add('hidden');submitUploadBtn.disabled=true;};
+        submitUploadBtn.onclick=()=>{
             const today = new Date().toDateString();
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toDateString();
-
-            if (lastSignDate !== yesterdayStr) {
-                continuousDays = 0;
-            }
+            const yesterday = new Date();yesterday.setDate(yesterday.getDate()-1);
+            if(lastSignDate !== yesterday.toDateString()) continuousDays=0;
             continuousDays++;
-            lastSignDate = today;
-            localStorage.setItem('lastSignDate', today);
-            localStorage.setItem('continuousDays', continuousDays);
-
-            // 关闭弹窗，更新显示
+            lastSignDate=today;
+            localStorage.setItem('lastSignDate',today);
+            localStorage.setItem('continuousDays',continuousDays);
             uploadModal.classList.add('hidden');
-            screenshotInput.value = '';
-            fileNameEl.classList.add('hidden');
-            submitUploadBtn.disabled = true;
             updateDisplay();
+            alert(`🎉 签到成功！连续${continuousDays}天\n奖励将发送至：${userEmail}`);
+        };
 
-            // 签到成功提示
-            alert(`🎉 签到提交成功！\n连续签到天数：${continuousDays} 天\n截图将由管理员审核，奖励将在24小时内发送至：${userEmail}`);
-        });
-
-        // 初始化显示
         updateDisplay();
     </script>
 </body>
