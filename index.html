@@ -4,98 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>格道黑科技 - 签到领奖励</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui, sans-serif;}
+        body{background:#f5f5f5;padding:15px;}
+        .container{max-width:400px;margin:0 auto;background:white;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+        .title{text-align:center;font-size:22px;margin-bottom:20px;}
+        .email-box{background:#e6f7ff;padding:15px;border-radius:8px;margin-bottom:15px;text-align:center;}
+        .email-title{color:#1890ff;font-weight:bold;margin-bottom:10px;}
+        #email-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-top:5px;}
+        .email-tip{font-size:12px;color:#666;margin-top:5px;}
+        .poster-box{text-align:center;margin-bottom:15px;}
+        .poster-title{font-weight:bold;margin-bottom:8px;}
+        .poster-img{width:100%;max-width:280px;border-radius:8px;border:1px solid #eee;}
+        .poster-tip{font-size:12px;color:#666;margin-top:5px;}
+        .info-box{background:#fafafa;padding:15px;border-radius:8px;margin-bottom:15px;}
+        .info-box p{margin-bottom:8px;}
+        .progress{width:100%;height:12px;background:#eee;border-radius:6px;overflow:hidden;margin-top:5px;}
+        .progress-bar{height:100%;background:#1890ff;width:0%;transition:0.3s;}
+        .sign-btn{width:100%;background:#52c41a;color:white;border:none;padding:12px;border-radius:8px;font-weight:bold;font-size:16px;margin-bottom:15px;}
+        .sign-btn:active{background:#49aa19;}
+        .reward-box{margin-bottom:15px;}
+        .reward-title{font-weight:bold;margin-bottom:8px;}
+        .reward-item{padding:10px;border:1px solid #eee;border-radius:6px;margin-bottom:6px;background:#fafafa;}
+        .rule-box{background:#fff7e6;padding:12px;border-radius:8px;font-size:13px;color:#666;}
+        .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;z-index:999;}
+        .modal-content{background:white;width:90%;max-width:320px;padding:20px;border-radius:10px;}
+        .modal-title{font-weight:bold;margin-bottom:10px;}
+        .modal-tip{color:#666;margin-bottom:10px;font-size:14px;}
+        .modal-btns{display:flex;gap:10px;margin-top:15px;}
+        .modal-btn{flex:1;padding:8px;border-radius:6px;border:none;}
+        .btn-cancel{background:#eee;}
+        .btn-submit{background:#1890ff;color:white;}
+        .btn-submit:disabled{opacity:0.5;}
+        .fileName{color:#52c41a;font-size:13px;margin:5px 0;display:none;}
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
-    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6">
-        <!-- 标题 -->
-        <h1 class="text-2xl font-bold text-center mb-6">📅 连续签到领奖励</h1>
+<body>
+    <div class="container">
+        <h1 class="title">📅 连续签到领奖励</h1>
 
-        <!-- 邮箱绑定区域 -->
-        <div class="bg-blue-50 p-4 rounded-lg mb-6">
-            <h3 class="font-bold text-center text-blue-600 mb-3">📩 先绑定邮箱，奖励统一发放</h3>
-            <input type="email" id="email-input" placeholder="请输入您的常用邮箱（如：xxx@qq.com）" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <p class="text-xs text-center text-gray-500 mt-2">⚠️ 所有签到奖励将统一发送至该邮箱，请准确填写</p>
+        <!-- 邮箱绑定 -->
+        <div class="email-box">
+            <div class="email-title">📩 先绑定邮箱，奖励统一发放</div>
+            <input type="email" id="email-input" placeholder="请输入您的常用邮箱（如：xxx@qq.com）">
+            <p class="email-tip">⚠️ 所有奖励将统一发送至该邮箱，请准确填写</p>
         </div>
 
-        <!-- 🔥 你的专属转发海报（已适配3:4比例） -->
-        <div class="mb-6 text-center">
-            <p class="font-bold mb-2">🖼️ 长按保存转发海报</p>
-            <!-- 把这里的链接替换成你刚才复制的GitHub图片链接 -->
-            <img src="这里替换成你的海报图片链接" alt="格道资源站海报" class="w-full max-w-xs mx-auto rounded-lg shadow-md border">
-            <p class="text-xs text-gray-500 mt-1">长按图片 → 保存到手机</p>
+        <!-- 朋友圈海报（内置代码，秒加载） -->
+        <div class="poster-box">
+            <p class="poster-title">🖼️ 长按保存转发海报</p>
+            <img src="https://p6-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/86ba47af58c7428ba8a3e505cdd130a3.png" alt="转发海报" class="poster-img">
+            <p class="poster-tip">长按图片 → 保存到手机</p>
         </div>
 
         <!-- 签到状态 -->
-        <div class="bg-gray-50 rounded-lg p-4 mb-6">
-            <p class="mb-2">📧 已绑定邮箱：<span id="email-display" class="text-blue-600 font-bold">未绑定</span></p>
-            <p class="mb-4">🔥 连续签到：<span id="days-display" class="text-red-500 font-bold">0</span> 天</p>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-                <div id="progress-bar" class="bg-blue-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+        <div class="info-box">
+            <p>📧 已绑定邮箱：<span id="email-display">未绑定</span></p>
+            <p>🔥 连续签到：<span id="days-display" style="color:#ff4d4f;font-weight:bold;">0</span> 天</p>
+            <div class="progress">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
         </div>
 
-        <!-- ✅ 一键转发按钮 -->
-        <button id="sign-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg mb-6 transition-colors">
-            一键复制文案 + 去发朋友圈
-        </button>
+        <!-- 签到按钮 -->
+        <button class="sign-btn" id="sign-btn">一键复制文案 + 去发朋友圈</button>
 
         <!-- 奖励列表 -->
-        <div class="space-y-3 mb-6">
-            <h3 class="font-bold text-lg">🎁 签到奖励一览</h3>
-            <div class="p-3 border rounded-lg bg-gray-50">
-                <p class="font-semibold">连续签到1天</p>
-                <p class="text-sm text-gray-600">2026最新院线电影合集</p>
-            </div>
-            <div class="p-3 border rounded-lg bg-gray-50">
-                <p class="font-semibold">连续签到3天</p>
-                <p class="text-sm text-gray-600">4月新番全集 + AI工具大礼包</p>
-            </div>
-            <div class="p-3 border rounded-lg bg-gray-50">
-                <p class="font-semibold">连续签到7天</p>
-                <p class="text-sm text-gray-600">美团拍照掘金全套教程</p>
-            </div>
-            <div class="p-3 border rounded-lg bg-gray-50">
-                <p class="font-semibold">连续签到15天</p>
-                <p class="text-sm text-gray-600">全站所有资源 + VIP内部交流群</p>
-            </div>
+        <div class="reward-box">
+            <h3 class="reward-title">🎁 签到奖励一览</h3>
+            <div class="reward-item"><p>连续签到1天</p><p style="font-size:13px;color:#666;">2026最新院线电影合集</p></div>
+            <div class="reward-item"><p>连续签到3天</p><p style="font-size:13px;color:#666;">4月新番全集 + AI工具大礼包</p></div>
+            <div class="reward-item"><p>连续签到7天</p><p style="font-size:13px;color:#666;">美团拍照掘金全套教程</p></div>
+            <div class="reward-item"><p>连续签到15天</p><p style="font-size:13px;color:#666;">全站所有资源 + VIP内部交流群</p></div>
         </div>
 
-        <!-- 规则说明 -->
-        <div class="bg-yellow-50 p-4 rounded-lg text-sm text-gray-700">
-            <h4 class="font-bold mb-2">📌 签到规则</h4>
-            <ul class="space-y-1">
-                <li>1. 每日签到1次，断签重置天数</li>
-                <li>2. 必须转发朋友圈+上传截图才算签到成功</li>
-                <li>3. 奖励24小时内发放至绑定邮箱</li>
-            </ul>
+        <!-- 规则 -->
+        <div class="rule-box">
+            <p style="font-weight:bold;margin-bottom:5px;">📌 签到规则</p>
+            <p>1. 每日签到1次，断签重置天数</p>
+            <p>2. 必须转发朋友圈+上传截图才算签到成功</p>
+            <p>3. 奖励24小时内发放至绑定邮箱</p>
         </div>
     </div>
 
     <!-- 上传截图弹窗 -->
-    <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 class="text-xl font-bold mb-4">📤 上传朋友圈截图</h2>
-            <p class="text-gray-600 mb-4">请上传发布成功的朋友圈截图</p>
-            <input type="file" id="screenshot-input" accept="image/*" class="w-full mb-4">
-            <p id="file-name" class="text-sm text-green-600 mb-4 hidden"></p>
-            <div class="flex gap-4">
-                <button id="cancel-upload" class="flex-1 bg-gray-200 rounded-lg py-2">取消</button>
-                <button id="submit-upload" class="flex-1 bg-blue-500 text-white rounded-lg py-2 disabled:opacity-50" disabled>提交截图</button>
+    <div class="modal" id="upload-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">📤 上传朋友圈截图</h2>
+            <p class="modal-tip">请上传发布成功的朋友圈截图</p>
+            <input type="file" id="screenshot-input" accept="image/*">
+            <p class="fileName" id="file-name"></p>
+            <div class="modal-btns">
+                <button class="modal-btn btn-cancel" id="cancel-upload">取消</button>
+                <button class="modal-btn btn-submit" id="submit-upload" disabled>提交截图</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 推广文案（和海报完全匹配）
+        // 推广文案
         const PROMO_TEXT = `【格道资源站】免费分享2026最新影视、动漫、AI工具、副业项目！
 我已经领到超多资源，推荐给大家👇
 关注公众号【格道黑科技】，回复「资源站」获取地址`;
 
-        // 严格邮箱验证
+        // 邮箱验证
         const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        // DOM元素
+        // 元素
         const signBtn = document.getElementById('sign-btn');
         const emailInput = document.getElementById('email-input');
         const emailDisplay = document.getElementById('email-display');
@@ -116,12 +131,12 @@
         function updateDisplay() {
             daysDisplay.textContent = continuousDays;
             emailDisplay.textContent = userEmail || '未绑定';
-            progressBar.style.width = `${Math.min(continuousDays/15*100, 100)}%`;
-            userEmail && (emailInput.value = userEmail);
+            progressBar.style.width = Math.min(continuousDays/15*100, 100) + '%';
+            if(userEmail) emailInput.value = userEmail;
         }
 
-        // 一键转发按钮
-        signBtn.addEventListener('click', async () => {
+        // 签到按钮
+        signBtn.onclick = async () => {
             const email = emailInput.value.trim();
             if(!email){alert('请输入邮箱！');return;}
             if(!EMAIL_REGEX.test(email)){alert('请输入完整邮箱（xxx@qq.com）');return;}
@@ -129,38 +144,55 @@
             userEmail = email;
             localStorage.setItem('userEmail', email);
             
-            // 自动复制文案
+            // 复制文案
             try{await navigator.clipboard.writeText(PROMO_TEXT);}catch(e){}
             
-            // 引导用户操作
             alert(`✅ 文案已复制！
 1. 长按页面图片保存到手机
 2. 打开微信朋友圈
 3. 粘贴文案+上传图片发布
 4. 返回上传发布截图完成签到`);
             
-            uploadModal.classList.remove('hidden');
-        });
+            uploadModal.style.display = 'flex';
+        };
 
-        // 上传截图逻辑
-        screenshotInput.addEventListener('change', (e)=>{
+        // 文件选择
+        screenshotInput.onchange = (e) => {
             const file = e.target.files[0];
-            if(file){fileNameEl.textContent=`已选：${file.name}`;fileNameEl.classList.remove('hidden');submitUploadBtn.disabled=false;}
-        });
-        cancelUploadBtn.onclick=()=>{uploadModal.classList.add('hidden');submitUploadBtn.disabled=true;};
-        submitUploadBtn.onclick=()=>{
+            if(file){
+                fileNameEl.textContent = `已选：${file.name}`;
+                fileNameEl.style.display = 'block';
+                submitUploadBtn.disabled = false;
+            }
+        };
+
+        // 取消上传
+        cancelUploadBtn.onclick = () => {
+            uploadModal.style.display = 'none';
+            submitUploadBtn.disabled = true;
+            fileNameEl.style.display = 'none';
+            screenshotInput.value = '';
+        };
+
+        // 提交截图
+        submitUploadBtn.onclick = () => {
             const today = new Date().toDateString();
-            const yesterday = new Date();yesterday.setDate(yesterday.getDate()-1);
-            if(lastSignDate !== yesterday.toDateString()) continuousDays=0;
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if(lastSignDate !== yesterday.toDateString()) continuousDays = 0;
             continuousDays++;
-            lastSignDate=today;
-            localStorage.setItem('lastSignDate',today);
-            localStorage.setItem('continuousDays',continuousDays);
-            uploadModal.classList.add('hidden');
+            lastSignDate = today;
+            
+            localStorage.setItem('lastSignDate', today);
+            localStorage.setItem('continuousDays', continuousDays);
+            
+            uploadModal.style.display = 'none';
             updateDisplay();
             alert(`🎉 签到成功！连续${continuousDays}天\n奖励将发送至：${userEmail}`);
         };
 
+        // 初始化
         updateDisplay();
     </script>
 </body>
