@@ -1,199 +1,193 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>格道黑科技 - 签到领奖励</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui, sans-serif;}
-        body{background:#f5f5f5;padding:15px;}
-        .container{max-width:400px;margin:0 auto;background:white;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-        .title{text-align:center;font-size:22px;margin-bottom:20px;}
-        .email-box{background:#e6f7ff;padding:15px;border-radius:8px;margin-bottom:15px;text-align:center;}
-        .email-title{color:#1890ff;font-weight:bold;margin-bottom:10px;}
-        #email-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-top:5px;}
-        .email-tip{font-size:12px;color:#666;margin-top:5px;}
-        .poster-box{text-align:center;margin-bottom:15px;}
-        .poster-title{font-weight:bold;margin-bottom:8px;}
-        .poster-img{width:100%;max-width:280px;border-radius:8px;border:1px solid #eee;}
-        .poster-tip{font-size:12px;color:#666;margin-top:5px;}
-        .info-box{background:#fafafa;padding:15px;border-radius:8px;margin-bottom:15px;}
-        .info-box p{margin-bottom:8px;}
-        .progress{width:100%;height:12px;background:#eee;border-radius:6px;overflow:hidden;margin-top:5px;}
-        .progress-bar{height:100%;background:#1890ff;width:0%;transition:0.3s;}
-        .sign-btn{width:100%;background:#52c41a;color:white;border:none;padding:12px;border-radius:8px;font-weight:bold;font-size:16px;margin-bottom:15px;}
-        .sign-btn:active{background:#49aa19;}
-        .reward-box{margin-bottom:15px;}
-        .reward-title{font-weight:bold;margin-bottom:8px;}
-        .reward-item{padding:10px;border:1px solid #eee;border-radius:6px;margin-bottom:6px;background:#fafafa;}
-        .rule-box{background:#fff7e6;padding:12px;border-radius:8px;font-size:13px;color:#666;}
-        .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;z-index:999;}
-        .modal-content{background:white;width:90%;max-width:320px;padding:20px;border-radius:10px;}
-        .modal-title{font-weight:bold;margin-bottom:10px;}
-        .modal-tip{color:#666;margin-bottom:10px;font-size:14px;}
-        .modal-btns{display:flex;gap:10px;margin-top:15px;}
-        .modal-btn{flex:1;padding:8px;border-radius:6px;border:none;}
-        .btn-cancel{background:#eee;}
-        .btn-submit{background:#1890ff;color:white;}
-        .btn-submit:disabled{opacity:0.5;}
-        .fileName{color:#52c41a;font-size:13px;margin:5px 0;display:none;}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>格道资源站-每日签到</title>
+<style>
+html,body{margin:0;padding:0;background:#f4f5f7;font-family:微软雅黑,sans-serif;}
+.box{width:92%;margin:0 auto;padding:15px;background:#fff;border-radius:10px;}
+.tit{text-align:center;font-size:20px;font-weight:bold;margin:10px 0 20px;}
+.mailTop{background:#f0f7ff;padding:12px;border-radius:8px;margin-bottom:15px;}
+.mailTit{color:#0066cc;font-weight:bold;text-align:center;margin-bottom:8px;}
+#mail{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;outline:none;}
+.tip{font-size:12px;color:#666;text-align:center;margin-top:6px;}
+.imgBox{text-align:center;margin:15px 0;}
+.fbImg{width:260px;border-radius:8px;}
+.state{background:#f8f8f8;padding:12px;border-radius:8px;margin:15px 0;}
+.dayNum{color:#e53935;font-weight:bold;}
+.bar{height:10px;background:#eee;border-radius:5px;overflow:hidden;margin-top:8px;}
+.barIn{height:100%;background:#409eff;width:0%;transition:.3s;}
+.btn{display:block;width:100%;background:#27ae60;color:#fff;text-align:center;padding:12px;border-radius:8px;border:none;font-size:16px;margin:10px 0;}
+.reward{margin:15px 0;}
+.rewardItem{border:1px solid #eee;padding:10px;border-radius:6px;margin-bottom:8px;}
+.rule{background:#fffbeb;padding:12px;border-radius:8px;font-size:13px;color:#555;}
+.pop{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;}
+.popCon{width:85%;background:#fff;margin:60px auto;padding:20px;border-radius:10px;}
+.popBtn{display:flex;gap:10px;margin-top:15px;}
+.btn1{flex:1;padding:10px;border:0;border-radius:6px;background:#eee;}
+.btn2{flex:1;padding:10px;border:0;border-radius:6px;background:#409eff;color:#fff;}
+.btn2:disabled{opacity:0.5;}
+.fileName{font-size:12px;color:green;margin:8px 0;display:none;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">📅 连续签到领奖励</h1>
+<div class="box">
+    <div class="tit">📅 连续签到领奖励</div>
 
-        <!-- 邮箱绑定 -->
-        <div class="email-box">
-            <div class="email-title">📩 先绑定邮箱，奖励统一发放</div>
-            <input type="email" id="email-input" placeholder="请输入您的常用邮箱（如：xxx@qq.com）">
-            <p class="email-tip">⚠️ 所有奖励将统一发送至该邮箱，请准确填写</p>
+    <div class="mailTop">
+        <div class="mailTit">📩 绑定邮箱 奖励统一发放</div>
+        <input type="email" id="mail" placeholder="填写完整邮箱：xxx@qq.com">
+        <div class="tip">所有奖励自动发送至填写邮箱</div>
+    </div>
+
+    <div class="imgBox">
+        <p style="font-weight:bold;margin-bottom:8px;">🖼️ 长按保存朋友圈配图</p>
+        <!-- 朋友圈专用3:4清新海报 内嵌无外链 -->
+        <img class="fbImg" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAkACQAAD/4QBYRXhpZgAATU0AKgAAAAgAAgESAAMAAAABAAEAAIdpAAQAAAABAAAAJgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAZKADAAQAAAABAAAAZAAAAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBABAAD//2Q==">
+        <div class="tip">长按图片保存到手机</div>
+    </div>
+
+    <div class="state">
+        <p>📧 已绑定邮箱：<span id="mailShow">未绑定</span></p>
+        <p>🔥 连续签到：<span class="dayNum" id="day">0</span> 天</p>
+        <div class="bar"><div class="barIn" id="bar"></div></div>
+    </div>
+
+    <button class="btn" id="signBtn">一键复制文案 去发朋友圈</button>
+
+    <div class="reward">
+        <p style="font-weight:bold;margin-bottom:10px;">🎁 签到奖励一览</p>
+        <div class="rewardItem">
+            <div>连续签到1天</div>
+            <div style="font-size:12px;color:#666;">2026最新院线电影合集</div>
         </div>
-
-        <!-- 朋友圈海报（内置代码，秒加载） -->
-        <div class="poster-box">
-            <p class="poster-title">🖼️ 长按保存转发海报</p>
-            <img src="https://p6-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/86ba47af58c7428ba8a3e505cdd130a3.png" alt="转发海报" class="poster-img">
-            <p class="poster-tip">长按图片 → 保存到手机</p>
+        <div class="rewardItem">
+            <div>连续签到3天</div>
+            <div style="font-size:12px;color:#666;">4月新番全集+AI工具大礼包</div>
         </div>
-
-        <!-- 签到状态 -->
-        <div class="info-box">
-            <p>📧 已绑定邮箱：<span id="email-display">未绑定</span></p>
-            <p>🔥 连续签到：<span id="days-display" style="color:#ff4d4f;font-weight:bold;">0</span> 天</p>
-            <div class="progress">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
+        <div class="rewardItem">
+            <div>连续签到7天</div>
+            <div style="font-size:12px;color:#666;">副业全套实操教程</div>
         </div>
-
-        <!-- 签到按钮 -->
-        <button class="sign-btn" id="sign-btn">一键复制文案 + 去发朋友圈</button>
-
-        <!-- 奖励列表 -->
-        <div class="reward-box">
-            <h3 class="reward-title">🎁 签到奖励一览</h3>
-            <div class="reward-item"><p>连续签到1天</p><p style="font-size:13px;color:#666;">2026最新院线电影合集</p></div>
-            <div class="reward-item"><p>连续签到3天</p><p style="font-size:13px;color:#666;">4月新番全集 + AI工具大礼包</p></div>
-            <div class="reward-item"><p>连续签到7天</p><p style="font-size:13px;color:#666;">美团拍照掘金全套教程</p></div>
-            <div class="reward-item"><p>连续签到15天</p><p style="font-size:13px;color:#666;">全站所有资源 + VIP内部交流群</p></div>
-        </div>
-
-        <!-- 规则 -->
-        <div class="rule-box">
-            <p style="font-weight:bold;margin-bottom:5px;">📌 签到规则</p>
-            <p>1. 每日签到1次，断签重置天数</p>
-            <p>2. 必须转发朋友圈+上传截图才算签到成功</p>
-            <p>3. 奖励24小时内发放至绑定邮箱</p>
+        <div class="rewardItem">
+            <div>连续签到15天</div>
+            <div style="font-size:12px;color:#666;">全站资源+VIP内部群</div>
         </div>
     </div>
 
-    <!-- 上传截图弹窗 -->
-    <div class="modal" id="upload-modal">
-        <div class="modal-content">
-            <h2 class="modal-title">📤 上传朋友圈截图</h2>
-            <p class="modal-tip">请上传发布成功的朋友圈截图</p>
-            <input type="file" id="screenshot-input" accept="image/*">
-            <p class="fileName" id="file-name"></p>
-            <div class="modal-btns">
-                <button class="modal-btn btn-cancel" id="cancel-upload">取消</button>
-                <button class="modal-btn btn-submit" id="submit-upload" disabled>提交截图</button>
-            </div>
+    <div class="rule">
+        <p style="font-weight:bold;">📌 签到规则</p>
+        <p>1.每日限签到1次，断签天数清零</p>
+        <p>2.必须转发朋友圈+上传截图才算有效</p>
+        <p>3.所有奖励统一发送至绑定邮箱</p>
+    </div>
+</div>
+
+<!-- 上传截图弹窗 -->
+<div class="pop" id="pop">
+    <div class="popCon">
+        <h3>上传朋友圈截图</h3>
+        <p style="font-size:13px;color:#666;margin:8px 0;">上传完整朋友圈发布截图</p>
+        <input type="file" id="file" accept="image/*">
+        <div class="fileName" id="fileTip">已选择图片</div>
+        <div class="popBtn">
+            <button class="btn1" id="closePop">取消</button>
+            <button class="btn2" id="subBtn" disabled>提交截图</button>
         </div>
     </div>
+</div>
 
-    <script>
-        // 推广文案
-        const PROMO_TEXT = `【格道资源站】免费分享2026最新影视、动漫、AI工具、副业项目！
-我已经领到超多资源，推荐给大家👇
-关注公众号【格道黑科技】，回复「资源站」获取地址`;
+<script>
+//转发文案
+const text = `【格道资源站】免费分享2026最新影视、动漫、AI工具、副业项目！
+我已经领到超多优质资源，免费分享给大家👇
+关注公众号【格道黑科技】，回复：资源站 直达获取`;
 
-        // 邮箱验证
-        const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//邮箱正则强验证
+const mailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 
-        // 元素
-        const signBtn = document.getElementById('sign-btn');
-        const emailInput = document.getElementById('email-input');
-        const emailDisplay = document.getElementById('email-display');
-        const daysDisplay = document.getElementById('days-display');
-        const progressBar = document.getElementById('progress-bar');
-        const uploadModal = document.getElementById('upload-modal');
-        const screenshotInput = document.getElementById('screenshot-input');
-        const fileNameEl = document.getElementById('file-name');
-        const submitUploadBtn = document.getElementById('submit-upload');
-        const cancelUploadBtn = document.getElementById('cancel-upload');
+//元素
+let mail = document.getElementById('mail');
+let mailShow = document.getElementById('mailShow');
+let day = document.getElementById('day');
+let bar = document.getElementById('bar');
+let signBtn = document.getElementById('signBtn');
+let pop = document.getElementById('pop');
+let file = document.getElementById('file');
+let fileTip = document.getElementById('fileTip');
+let subBtn = document.getElementById('subBtn');
+let closePop = document.getElementById('closePop');
 
-        // 本地存储
-        let lastSignDate = localStorage.getItem('lastSignDate');
-        let continuousDays = parseInt(localStorage.getItem('continuousDays') || 0);
-        let userEmail = localStorage.getItem('userEmail') || '';
+//本地存储
+let lastDay = localStorage.getItem('lastDay') || '';
+let contDay = Number(localStorage.getItem('contDay')) || 0;
+let saveMail = localStorage.getItem('saveMail') || '';
 
-        // 更新界面
-        function updateDisplay() {
-            daysDisplay.textContent = continuousDays;
-            emailDisplay.textContent = userEmail || '未绑定';
-            progressBar.style.width = Math.min(continuousDays/15*100, 100) + '%';
-            if(userEmail) emailInput.value = userEmail;
-        }
+//初始化
+function init(){
+    day.innerText = contDay;
+    mailShow.innerText = saveMail || "未绑定";
+    mail.value = saveMail;
+    bar.style.width = Math.min(contDay/15*100,100)+"%";
+}
+init();
 
-        // 签到按钮
-        signBtn.onclick = async () => {
-            const email = emailInput.value.trim();
-            if(!email){alert('请输入邮箱！');return;}
-            if(!EMAIL_REGEX.test(email)){alert('请输入完整邮箱（xxx@qq.com）');return;}
-            
-            userEmail = email;
-            localStorage.setItem('userEmail', email);
-            
-            // 复制文案
-            try{await navigator.clipboard.writeText(PROMO_TEXT);}catch(e){}
-            
-            alert(`✅ 文案已复制！
-1. 长按页面图片保存到手机
-2. 打开微信朋友圈
-3. 粘贴文案+上传图片发布
-4. 返回上传发布截图完成签到`);
-            
-            uploadModal.style.display = 'flex';
-        };
+//签到按钮
+signBtn.onclick = async function(){
+    let m = mail.value.trim();
+    if(!m){alert("请先填写邮箱！");return;}
+    if(!mailReg.test(m)){alert("请填写完整有效邮箱\n例：123@qq.com");return;}
+    saveMail = m;
+    localStorage.setItem('saveMail',m);
+    mailShow.innerText = m;
 
-        // 文件选择
-        screenshotInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if(file){
-                fileNameEl.textContent = `已选：${file.name}`;
-                fileNameEl.style.display = 'block';
-                submitUploadBtn.disabled = false;
-            }
-        };
+    let now = new Date().toDateString();
+    if(lastDay === now){alert("今日已签到，明天再来！");return;}
 
-        // 取消上传
-        cancelUploadBtn.onclick = () => {
-            uploadModal.style.display = 'none';
-            submitUploadBtn.disabled = true;
-            fileNameEl.style.display = 'none';
-            screenshotInput.value = '';
-        };
+    //复制文案
+    try{await navigator.clipboard.writeText(text);}catch(e){}
+    alert("✅文案已复制\n1.长按图片保存\n2.打开朋友圈粘贴发布\n3.返回上传截图完成签到");
+    pop.style.display = "block";
+}
 
-        // 提交截图
-        submitUploadBtn.onclick = () => {
-            const today = new Date().toDateString();
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            if(lastSignDate !== yesterday.toDateString()) continuousDays = 0;
-            continuousDays++;
-            lastSignDate = today;
-            
-            localStorage.setItem('lastSignDate', today);
-            localStorage.setItem('continuousDays', continuousDays);
-            
-            uploadModal.style.display = 'none';
-            updateDisplay();
-            alert(`🎉 签到成功！连续${continuousDays}天\n奖励将发送至：${userEmail}`);
-        };
+//选择图片
+file.onchange = function(){
+    if(this.files[0]){
+        fileTip.style.display = "block";
+        subBtn.disabled = false;
+    }
+}
 
-        // 初始化
-        updateDisplay();
-    </script>
+//关闭弹窗
+closePop.onclick = function(){
+    pop.style.display = "none";
+    file.value = "";
+    fileTip.style.display = "none";
+    subBtn.disabled = true;
+}
+
+//提交截图
+subBtn.onclick = function(){
+    let now = new Date().toDateString();
+    let yesDay = new Date();
+    yesDay.setDate(yesDay.getDate()-1);
+    let yesStr = yesDay.toDateString();
+
+    if(lastDay !== yesStr) contDay = 0;
+    contDay++;
+    lastDay = now;
+
+    localStorage.setItem('contDay',contDay);
+    localStorage.setItem('lastDay',lastDay);
+
+    pop.style.display = "none";
+    file.value = "";
+    fileTip.style.display = "none";
+    subBtn.disabled = true;
+    init();
+    alert("🎉签到成功！\n连续"+contDay+"天\n奖励将发放至："+saveMail);
+}
+</script>
 </body>
 </html>
