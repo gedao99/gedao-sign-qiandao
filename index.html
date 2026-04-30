@@ -58,19 +58,49 @@
             <h4 class="font-bold mb-2">📌 签到规则</h4>
             <ul class="space-y-1">
                 <li>1. 每日可签到1次，断签后签到进度将重置为0天</li>
-                <li>2. 所有奖励自动发放至绑定邮箱，无需手动领取</li>
-                <li>3. 连续签到天数越高，解锁的奖励越丰厚</li>
+                <li>2. 签到需转发指定文案到朋友圈并上传截图</li>
+                <li>3. 所有奖励自动发放至绑定邮箱，无需手动领取</li>
             </ul>
         </div>
     </div>
 
+    <!-- 上传朋友圈截图弹窗 -->
+    <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 class="text-xl font-bold mb-4">📤 上传朋友圈截图</h2>
+            <p class="text-gray-600 mb-4">请上传包含完整文案和发布时间的朋友圈截图</p>
+            
+            <input type="file" id="screenshot-input" accept="image/*" class="w-full mb-4">
+            <p id="file-name" class="text-sm text-green-600 mb-4 hidden"></p>
+
+            <div class="flex gap-4">
+                <button id="cancel-upload" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">
+                    取消
+                </button>
+                <button id="submit-upload" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-50" disabled>
+                    提交截图
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // 【可修改】推广文案（用户点击签到会自动复制）
+        const PROMO_TEXT = `【格道黑科技】免费分享2026最新影视、动漫、AI工具、副业项目大全！
+我已经在这里领到了好多好用的资源，推荐给大家👇
+关注公众号【格道黑科技】，回复「资源站」获取地址`;
+
         // 初始化DOM元素
         const signBtn = document.getElementById('sign-btn');
         const daysDisplay = document.getElementById('days-display');
         const emailDisplay = document.getElementById('email-display');
         const emailInput = document.getElementById('email-input');
         const progressBar = document.getElementById('progress-bar');
+        const uploadModal = document.getElementById('upload-modal');
+        const screenshotInput = document.getElementById('screenshot-input');
+        const fileNameEl = document.getElementById('file-name');
+        const cancelUploadBtn = document.getElementById('cancel-upload');
+        const submitUploadBtn = document.getElementById('submit-upload');
 
         // 读取本地存储数据
         let lastSignDate = localStorage.getItem('lastSignDate');
@@ -88,7 +118,7 @@
         }
 
         // 签到按钮点击事件
-        signBtn.addEventListener('click', function() {
+        signBtn.addEventListener('click', async function() {
             const email = emailInput.value.trim();
             if (!email) {
                 alert('请先输入您的邮箱！\n所有奖励将发送至该邮箱');
@@ -106,7 +136,44 @@
                 return;
             }
 
-            // 检查是否断签
+            // 步骤1：复制推广文案到剪贴板
+            try {
+                await navigator.clipboard.writeText(PROMO_TEXT);
+                alert('✅ 推广文案已复制！\n请转发到朋友圈后，上传截图完成签到');
+                // 步骤2：打开上传截图弹窗
+                uploadModal.classList.remove('hidden');
+            } catch (error) {
+                // 降级方案：浏览器不支持剪贴板API时，手动复制
+                alert('请手动复制以下文案转发朋友圈：\n\n' + PROMO_TEXT);
+                uploadModal.classList.remove('hidden');
+            }
+        });
+
+        // 监听文件选择，启用提交按钮
+        screenshotInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNameEl.textContent = `已选择文件：${file.name}`;
+                fileNameEl.classList.remove('hidden');
+                submitUploadBtn.disabled = false;
+            } else {
+                fileNameEl.classList.add('hidden');
+                submitUploadBtn.disabled = true;
+            }
+        });
+
+        // 取消上传
+        cancelUploadBtn.addEventListener('click', function() {
+            uploadModal.classList.add('hidden');
+            screenshotInput.value = '';
+            fileNameEl.classList.add('hidden');
+            submitUploadBtn.disabled = true;
+        });
+
+        // 提交截图，完成签到
+        submitUploadBtn.addEventListener('click', function() {
+            // 步骤3：更新签到数据
+            const today = new Date().toDateString();
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             const yesterdayStr = yesterday.toDateString();
@@ -114,18 +181,20 @@
             if (lastSignDate !== yesterdayStr) {
                 continuousDays = 0;
             }
-
-            // 签到成功
             continuousDays++;
             lastSignDate = today;
             localStorage.setItem('lastSignDate', today);
             localStorage.setItem('continuousDays', continuousDays);
 
-            // 更新显示
+            // 关闭弹窗，更新显示
+            uploadModal.classList.add('hidden');
+            screenshotInput.value = '';
+            fileNameEl.classList.add('hidden');
+            submitUploadBtn.disabled = true;
             updateDisplay();
 
-            // 提示信息
-            alert(`🎉 签到成功！\n连续签到天数：${continuousDays} 天\n奖励将在24小时内发送至：${email}`);
+            // 签到成功提示
+            alert(`🎉 签到提交成功！\n连续签到天数：${continuousDays} 天\n截图将由管理员审核，奖励将在24小时内发送至：${userEmail}`);
         });
 
         // 初始化显示
