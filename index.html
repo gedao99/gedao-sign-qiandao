@@ -11,9 +11,16 @@
         <!-- 标题 -->
         <h1 class="text-2xl font-bold text-center mb-6">📅 连续签到领奖励</h1>
 
+        <!-- 【已移到最顶部】邮箱绑定区域 -->
+        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+            <h3 class="font-bold text-center text-blue-600 mb-3">📩 先绑定邮箱，奖励统一发放</h3>
+            <input type="email" id="email-input" placeholder="请输入您的常用邮箱（必填）" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p class="text-xs text-center text-gray-500 mt-2">⚠️ 所有签到奖励将统一发送至该邮箱，请准确填写</p>
+        </div>
+
         <!-- 签到状态 -->
         <div class="bg-gray-50 rounded-lg p-4 mb-6">
-            <p class="mb-2">📧 绑定邮箱：<span id="email-display">未绑定</span></p>
+            <p class="mb-2">📧 已绑定邮箱：<span id="email-display" class="text-blue-600 font-bold">未绑定</span></p>
             <p class="mb-4">🔥 连续签到：<span id="days-display" class="text-red-500 font-bold">0</span> 天</p>
             <div class="w-full bg-gray-200 rounded-full h-3">
                 <div id="progress-bar" class="bg-blue-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
@@ -27,7 +34,7 @@
 
         <!-- 奖励列表 -->
         <div class="space-y-3 mb-6">
-            <h3 class="font-bold text-lg">🎁 奖励预览</h3>
+            <h3 class="font-bold text-lg">🎁 签到奖励一览</h3>
             <div class="p-3 border rounded-lg bg-gray-50">
                 <p class="font-semibold">连续签到1天</p>
                 <p class="text-sm text-gray-600">2026最新院线电影合集</p>
@@ -46,18 +53,13 @@
             </div>
         </div>
 
-        <!-- 邮箱输入 -->
-        <div class="mb-6">
-            <input type="email" id="email-input" placeholder="请输入邮箱（奖励将发送至此）" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
         <!-- 规则说明 -->
         <div class="bg-yellow-50 p-4 rounded-lg text-sm text-gray-700">
             <h4 class="font-bold mb-2">📌 签到规则</h4>
             <ul class="space-y-1">
-                <li>1. 每日可签到1次，断签后进度重置为0天</li>
-                <li>2. 奖励将在签到达标后自动发送至绑定邮箱</li>
-                <li>3. 连续签到天数越高，奖励越丰厚</li>
+                <li>1. 每日可签到1次，断签后签到进度将重置为0天</li>
+                <li>2. 所有奖励自动发放至绑定邮箱，无需手动领取</li>
+                <li>3. 连续签到天数越高，解锁的奖励越丰厚</li>
             </ul>
         </div>
     </div>
@@ -89,7 +91,7 @@
         signBtn.addEventListener('click', function() {
             const email = emailInput.value.trim();
             if (!email) {
-                alert('请先输入您的邮箱！');
+                alert('请先输入您的邮箱！\n所有奖励将发送至该邮箱');
                 return;
             }
 
@@ -123,7 +125,7 @@
             updateDisplay();
 
             // 提示信息
-            alert(`🎉 签到成功！\n连续签到天数：${continuousDays} 天\n奖励将发送至：${email}`);
+            alert(`🎉 签到成功！\n连续签到天数：${continuousDays} 天\n奖励将在24小时内发送至：${email}`);
         });
 
         // 初始化显示
